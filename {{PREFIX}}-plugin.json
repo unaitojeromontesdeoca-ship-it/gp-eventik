@@ -1,0 +1,25 @@
+{
+  "name": "{{NAME}}",
+  "slug": "{{SLUG}}",
+  "version": "0.0.0",
+  "download_url": "https://generacionpresente.org/wp-content/updates/{{SLUG}}.zip",
+  "url": "https://generacionpresente.org",
+  "author": "Generación Presente",
+  "author_profile": "https://generacionpresente.org",
+  "requires": "6.0",
+  "tested": "6.8",
+  "requires_php": "8.0",
+  "last_updated": "2026-01-01",
+  "icons": {
+    "1x": "https://generacionpresente.org/wp-content/updates/assets/icon-128x128.png",
+    "2x": "https://generacionpresente.org/wp-content/updates/assets/icon-256x256.png"
+  },
+  "banners": {
+    "low": "https://generacionpresente.org/wp-content/updates/assets/banner-772x250.png",
+    "high": "https://generacionpresente.org/wp-content/updates/assets/banner-1544x500.png"
+  },
+  "sections": {
+    "description": "{{DESC}}",
+    "changelog": "=== 0.0.0 ===\n- Puesta en marcha del sistema de actualizaciones (OTA)"
+  }
+}

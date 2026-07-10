@@ -1,0 +1,25 @@
+==============================================================================
+ SNIPPET PARA EL ARCHIVO PRINCIPAL DEL PLUGIN  (ej. mi-plugin.php)
+==============================================================================
+
+1) Donde defines tus constantes, asegúrate de tener estas (ajusta los nombres):
+
+   define('{{PREFIX_UP}}_DIR', plugin_dir_path(__FILE__));
+   define('{{PREFIX_UP}}_URL', plugin_dir_url(__FILE__));
+   define('{{PREFIX_UP}}_FILE', __FILE__);
+   define('{{PREFIX_UP}}_SLUG', '{{SLUG}}');
+   define('{{PREFIX_UP}}_VERSION', '0.0.0-dev');   // el build inyecta la versión real aquí
+
+2) Dentro del arranque del plugin (hook plugins_loaded), añade:
+
+   // Sistema de actualizaciones OTA
+   require_once {{PREFIX_UP}}_DIR . 'includes/update-manager.php';
+   new \{{NAMESPACE}}\Update_Manager\Update_Manager();
+
+3) En el hook de activación, limpia la caché de updates:
+
+   register_activation_hook(__FILE__, function () {
+       // ... tu código de activación ...
+       delete_transient('{{PREFIX}}_update_check');
+       delete_site_transient('update_plugins');
+   });
