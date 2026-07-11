@@ -1,15 +1,15 @@
 <?php
 /**
- * {{NAME}} Update Manager
+ * GP Eventik Update Manager
  *
- * Sistema de actualizaciones OTA del plugin {{NAME}}.
+ * Sistema de actualizaciones OTA del plugin GP Eventik.
  * Réplica del sistema de GP Ambassadors, con nombres propios de Support.
  *
- * @package {{NAMESPACE}}
+ * @package GP_Eventik
  * @subpackage Update_Manager
  */
 
-namespace {{NAMESPACE}}\Update_Manager;
+namespace GP_Eventik\Update_Manager;
 
 defined('ABSPATH') || exit;
 
@@ -20,7 +20,7 @@ defined('ABSPATH') || exit;
  */
 class Update_Manager {
     /** @var string Slug del plugin. */
-    private $slug = '{{SLUG}}';
+    private $slug = 'gp-eventik';
 
     /** @var string plugin_basename() calculado dinámicamente. */
     private $basename;
@@ -28,11 +28,11 @@ class Update_Manager {
     /** @var string Versión instalada actualmente. */
     private $current_version = '0.0.0';
 
-    /** @var string URL del {{PREFIX}}-plugin.json remoto (ruta plana con nombre por plugin). */
-    private $update_server_url = 'https://generacionpresente.org/wp-content/updates/{{PREFIX}}-plugin.json';
+    /** @var string URL del gpe-plugin.json remoto (ruta plana con nombre por plugin). */
+    private $update_server_url = 'https://generacionpresente.org/wp-content/updates/gpe-plugin.json';
 
     /** @var string Clave del transient de caché. */
-    private $cache_key = '{{PREFIX}}_update_check';
+    private $cache_key = 'gpe_update_check';
 
     /** @var int Segundos de caché (producción: 43200 = 12h; desarrollo: 60). */
     private $cache_expiration = 43200;
@@ -49,7 +49,7 @@ class Update_Manager {
         }
 
         // La versión sale de la cabecera del archivo principal (fuente única de verdad).
-        $plugin_data = get_plugin_data(GPS_DIR . '{{SLUG}}.php', false, false);
+        $plugin_data = get_plugin_data(GPS_DIR . 'gp-eventik.php', false, false);
         $this->current_version = $plugin_data['Version'] ?? '0.0.0';
 
         // Respaldo por la constante si fuera mayor.
@@ -57,7 +57,7 @@ class Update_Manager {
             $this->current_version = GPS_VERSION;
         }
 
-        $this->basename = plugin_basename(GPS_DIR . '{{SLUG}}.php');
+        $this->basename = plugin_basename(GPS_DIR . 'gp-eventik.php');
 
         // En modo desarrollo, la caché baja a 60s (aunque el early-return la salte igualmente).
         if (defined('GPS_DEV_MODE') && GPS_DEV_MODE) {
@@ -80,24 +80,24 @@ class Update_Manager {
      * Registra las opciones de configuración del servidor de updates.
      */
     public function register_settings() {
-        register_setting('{{PREFIX}}_settings', '{{PREFIX}}_update_server_url', [
+        register_setting('gpe_settings', 'gpe_update_server_url', [
             'type' => 'string',
             'default' => $this->update_server_url,
             'sanitize_callback' => 'esc_url_raw',
         ]);
 
-        register_setting('{{PREFIX}}_settings', '{{PREFIX}}_update_security_token', [
+        register_setting('gpe_settings', 'gpe_update_security_token', [
             'type' => 'string',
             'default' => '',
             'sanitize_callback' => 'sanitize_text_field',
         ]);
 
-        $saved_url = get_option('{{PREFIX}}_update_server_url');
+        $saved_url = get_option('gpe_update_server_url');
         if (!empty($saved_url)) {
             $this->update_server_url = $saved_url;
         }
 
-        $saved_token = get_option('{{PREFIX}}_update_security_token');
+        $saved_token = get_option('gpe_update_security_token');
         if (!empty($saved_token)) {
             $this->security_token = $saved_token;
         }
@@ -114,7 +114,7 @@ class Update_Manager {
         // Modo desarrollo: salir sin comprobar si GPS_DEV_MODE está activo.
         if (defined('GPS_DEV_MODE') && GPS_DEV_MODE) {
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('[{{PREFIX_UP}}-DEBUG] Modo desarrollo activo - se omite la comprobación OTA');
+                error_log('[GPE-DEBUG] Modo desarrollo activo - se omite la comprobación OTA');
             }
             return $transient;
         }
@@ -180,8 +180,8 @@ class Update_Manager {
 
         // Cache-busting para saltar cachés de servidor/CDN.
         $url = add_query_arg([
-            '_{{PREFIX}}_nocache' => time(),
-            '_{{PREFIX}}_version' => $this->current_version,
+            '_gpe_nocache' => time(),
+            '_gpe_version' => $this->current_version,
         ], $url);
 
         $response = wp_remote_get($url, [
@@ -195,12 +195,12 @@ class Update_Manager {
         ]);
 
         if (is_wp_error($response)) {
-            error_log('{{NAME}} Update Check Error: ' . $response->get_error_message());
+            error_log('GP Eventik Update Check Error: ' . $response->get_error_message());
             return false;
         }
 
         if (wp_remote_retrieve_response_code($response) !== 200) {
-            error_log('{{NAME}} Update Check Error: código de respuesta ' . wp_remote_retrieve_response_code($response));
+            error_log('GP Eventik Update Check Error: código de respuesta ' . wp_remote_retrieve_response_code($response));
             return false;
         }
 
@@ -208,12 +208,12 @@ class Update_Manager {
         $data = json_decode($body, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            error_log('{{NAME}} Update Check Error: JSON inválido - ' . json_last_error_msg());
+            error_log('GP Eventik Update Check Error: JSON inválido - ' . json_last_error_msg());
             return false;
         }
 
         if (empty($data) || !isset($data['version'])) {
-            error_log('{{NAME}} Update Check Error: datos de actualización inválidos');
+            error_log('GP Eventik Update Check Error: datos de actualización inválidos');
             return false;
         }
 
@@ -246,7 +246,7 @@ class Update_Manager {
         }
 
         $plugin_info = [
-            'name' => $cached_update['name'] ?? '{{NAME}}',
+            'name' => $cached_update['name'] ?? 'GP Eventik',
             'slug' => $this->slug,
             'version' => $cached_update['version'],
             'author' => $cached_update['author'] ?? 'Generación Presente',

@@ -1,8 +1,8 @@
 {
-  "name": "{{NAME}}",
-  "slug": "{{SLUG}}",
+  "name": "GP Eventik",
+  "slug": "gp-eventik",
   "version": "0.0.0",
-  "download_url": "https://generacionpresente.org/wp-content/updates/{{SLUG}}.zip",
+  "download_url": "https://generacionpresente.org/wp-content/updates/gp-eventik.zip",
   "url": "https://generacionpresente.org",
   "author": "Generación Presente",
   "author_profile": "https://generacionpresente.org",
@@ -19,7 +19,7 @@
     "high": "https://generacionpresente.org/wp-content/updates/assets/banner-1544x500.png"
   },
   "sections": {
-    "description": "{{DESC}}",
+    "description": "Eventos públicos e internos, inscripciones, ponentes, portal coordinadores, órganos de gobierno y acreditación QR para Generación Presente.",
     "changelog": "=== 0.0.0 ===\n- Puesta en marcha del sistema de actualizaciones (OTA)"
   }
 }

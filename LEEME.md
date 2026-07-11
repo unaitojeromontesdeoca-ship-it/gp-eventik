@@ -12,12 +12,12 @@ pegas un snippet en tu archivo principal, y ya tienes actualizaciones solas.
 
 | Token            | Qué es                        | Ejemplo (GP Support)  |
 |------------------|-------------------------------|-----------------------|
-| `{{NAME}}`       | Nombre visible del plugin     | `GP Support`          |
-| `{{SLUG}}`       | Slug / carpeta / nombre ZIP   | `gp-support`          |
-| `{{PREFIX}}`     | Prefijo en minúsculas         | `gps`                 |
-| `{{PREFIX_UP}}`  | Prefijo en MAYÚSCULAS         | `GPS`                 |
-| `{{NAMESPACE}}`  | Namespace PHP (con guion bajo)| `GP_Support`          |
-| `{{DESC}}`       | Descripción del plugin        | (una frase)           |
+| `GP Eventik`       | Nombre visible del plugin     | `GP Support`          |
+| `gp-eventik`       | Slug / carpeta / nombre ZIP   | `gp-support`          |
+| `gpe`     | Prefijo en minúsculas         | `gps`                 |
+| `GPE`  | Prefijo en MAYÚSCULAS         | `GPS`                 |
+| `GP_Eventik`  | Namespace PHP (con guion bajo)| `GP_Support`          |
+| `Eventos públicos e internos, inscripciones, ponentes, portal coordinadores, órganos de gobierno y acreditación QR para Generación Presente.`       | Descripción del plugin        | (una frase)           |
 
 Regla de oro: cada plugin debe tener un **PREFIX y un SLUG únicos**, porque
 todos comparten la misma carpeta `updates/` del servidor. Dos plugins con el
@@ -32,13 +32,13 @@ La forma más rápida y sin errores: abrir la carpeta en VS Code y usar
 
 | Archivo de la plantilla                | Ubicación final en el plugin              |
 |----------------------------------------|-------------------------------------------|
-| `{{PREFIX}}-plugin.json`               | RAÍZ del repo (y renómbralo, ej. `gpx-plugin.json`) |
+| `gpe-plugin.json`               | RAÍZ del repo (y renómbralo, ej. `gpx-plugin.json`) |
 | `includes/update-manager.php`          | `includes/update-manager.php`             |
 | `scripts/build.php`                    | `scripts/build.php`                        |
 | `.github/workflows/auto-release.yml`   | `.github/workflows/auto-release.yml`       |
 | `SNIPPET-archivo-principal.txt`        | NO se copia: es código para PEGAR en tu archivo principal |
 
-Ojo: el archivo `{{PREFIX}}-plugin.json` hay que **renombrarlo** al prefijo real
+Ojo: el archivo `gpe-plugin.json` hay que **renombrarlo** al prefijo real
 (el token del nombre de archivo no se auto-reemplaza).
 
 ---
@@ -47,7 +47,7 @@ Ojo: el archivo `{{PREFIX}}-plugin.json` hay que **renombrarlo** al prefijo real
 
 1. Copia los 4 archivos a sus ubicaciones (tabla de arriba).
 2. Reemplaza los 6 tokens en toda la carpeta.
-3. Renombra `{{PREFIX}}-plugin.json` -> `tuprefijo-plugin.json`.
+3. Renombra `gpe-plugin.json` -> `tuprefijo-plugin.json`.
 4. Pega el snippet de `SNIPPET-archivo-principal.txt` en tu archivo principal.
 5. Commit + push a `main`.
 

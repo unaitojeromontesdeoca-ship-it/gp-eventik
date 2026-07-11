@@ -1,9 +1,9 @@
 <?php
 /**
- * {{NAME}} Build Script
+ * GP Eventik Build Script
  *
- * Réplica del build de GP Ambassadors, adaptado a {{NAME}}.
- * Genera {{PREFIX}}-plugin.json y el ZIP {{SLUG}}.zip (carpeta interna {{SLUG}}/),
+ * Réplica del build de GP Ambassadors, adaptado a GP Eventik.
+ * Genera gpe-plugin.json y el ZIP gp-eventik.zip (carpeta interna gp-eventik/),
  * e inyecta la versión en la cabecera del plugin y en la constante GPS_VERSION.
  *
  * Uso:  php scripts/build.php 0.0.1
@@ -11,14 +11,14 @@
 
 defined('STDIN') || define('STDIN', fopen('php://stdin', 'r'));
 
-class {{NAMESPACE}}_Builder {
+class GP_Eventik_Builder {
     private $plugin_dir;
     private $version;
-    private $plugin_slug = '{{SLUG}}';
-    private $plugin_file = '{{SLUG}}.php';
-    private $json_file   = '{{PREFIX}}-plugin.json';
+    private $plugin_slug = 'gp-eventik';
+    private $plugin_file = 'gp-eventik.php';
+    private $json_file   = 'gpe-plugin.json';
     private $output_dir  = 'dist';
-    private $zip_file    = '{{SLUG}}.zip';
+    private $zip_file    = 'gp-eventik.zip';
 
     public function __construct() {
         $this->plugin_dir = dirname(__DIR__);
@@ -42,7 +42,7 @@ class {{NAMESPACE}}_Builder {
     }
 
     public function build() {
-        $this->echo_step('Iniciando build de {{NAME}}...');
+        $this->echo_step('Iniciando build de GP Eventik...');
         $this->echo_step("Versión: {$this->version}");
 
         $this->create_output_directory();
@@ -86,7 +86,7 @@ class {{NAMESPACE}}_Builder {
 
         // Solo archivos de producción.
         $items_to_copy = [
-            '{{SLUG}}.php',
+            'gp-eventik.php',
             'includes',
             'admin',
             'assets',
@@ -176,7 +176,7 @@ class {{NAMESPACE}}_Builder {
 
     private function generate_plugin_json() {
         $json_data = [
-            'name' => '{{NAME}}',
+            'name' => 'GP Eventik',
             'slug' => $this->plugin_slug,
             'version' => $this->version,
             'download_url' => 'https://generacionpresente.org/wp-content/updates/' . $this->zip_file,
@@ -196,7 +196,7 @@ class {{NAMESPACE}}_Builder {
                 'high' => 'https://generacionpresente.org/wp-content/updates/assets/banner-1544x500.png',
             ],
             'sections' => [
-                'description' => '{{DESC}}',
+                'description' => 'Eventos públicos e internos, inscripciones, ponentes, portal coordinadores, órganos de gobierno y acreditación QR para Generación Presente.',
                 'changelog' => '=== ' . $this->version . ' ===' . "\n" .
                                '- Actualización automática desde GitHub Actions' . "\n" .
                                '- Mejoras en el sistema de actualizaciones' . "\n" .
@@ -258,5 +258,5 @@ class {{NAMESPACE}}_Builder {
     }
 }
 
-$builder = new {{NAMESPACE}}_Builder();
+$builder = new GP_Eventik_Builder();
 $builder->build();

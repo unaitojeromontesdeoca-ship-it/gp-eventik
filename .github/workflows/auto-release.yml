@@ -1,11 +1,11 @@
-name: {{NAME}} Auto Release
+name: GP Eventik Auto Release
 
 on:
   push:
     branches:
       - main
     paths-ignore:
-      - '{{PREFIX}}-plugin.json'  # Evita el bucle infinito por el auto-commit de versión
+      - 'gpe-plugin.json'  # Evita el bucle infinito por el auto-commit de versión
 
 concurrency:
   group: auto-release-${{ github.ref }}
@@ -32,10 +32,10 @@ jobs:
           php-version: '8.2'
           extensions: zip, json, mbstring
 
-      - name: Get current version from {{PREFIX}}-plugin.json
+      - name: Get current version from gpe-plugin.json
         id: get_current_version
         run: |
-          CURRENT_VERSION=$(jq -r '.version' {{PREFIX}}-plugin.json)
+          CURRENT_VERSION=$(jq -r '.version' gpe-plugin.json)
           echo "Current version: $CURRENT_VERSION"
           echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
 
@@ -55,32 +55,32 @@ jobs:
         run: |
           echo "🔍 Validando artefactos del build..."
 
-          if [ ! -f "dist/{{SLUG}}.zip" ]; then
+          if [ ! -f "dist/gp-eventik.zip" ]; then
             echo "❌ Error: ZIP no encontrado"
             exit 1
           fi
 
-          if [ ! -f "dist/{{SLUG}}/{{PREFIX}}-plugin.json" ]; then
-            echo "❌ Error: {{PREFIX}}-plugin.json no encontrado"
+          if [ ! -f "dist/gp-eventik/gpe-plugin.json" ]; then
+            echo "❌ Error: gpe-plugin.json no encontrado"
             exit 1
           fi
 
-          JSON_VERSION=$(jq -r '.version' dist/{{SLUG}}/{{PREFIX}}-plugin.json)
+          JSON_VERSION=$(jq -r '.version' dist/gp-eventik/gpe-plugin.json)
           if [ "$JSON_VERSION" != "${{ steps.increment_version.outputs.new_version }}" ]; then
-            echo "❌ Error: versión distinta en {{PREFIX}}-plugin.json (esperada ${{ steps.increment_version.outputs.new_version }}, obtenida $JSON_VERSION)"
+            echo "❌ Error: versión distinta en gpe-plugin.json (esperada ${{ steps.increment_version.outputs.new_version }}, obtenida $JSON_VERSION)"
             exit 1
           fi
 
-          unzip -l dist/{{SLUG}}.zip | grep -q "{{SLUG}}/{{SLUG}}.php"
+          unzip -l dist/gp-eventik.zip | grep -q "gp-eventik/gp-eventik.php"
           if [ $? -ne 0 ]; then
-            echo "❌ Error: estructura del ZIP incorrecta - falta {{SLUG}}/{{SLUG}}.php"
+            echo "❌ Error: estructura del ZIP incorrecta - falta gp-eventik/gp-eventik.php"
             exit 1
           fi
 
           TMP_DIR=$(mktemp -d)
-          unzip -q dist/{{SLUG}}.zip -d $TMP_DIR
-          ZIP_VERSION=$(grep "Version:" $TMP_DIR/{{SLUG}}/{{SLUG}}.php | head -1 | awk '{print $3}')
-          ZIP_CONSTANT=$(grep "define('GPS_VERSION'" $TMP_DIR/{{SLUG}}/{{SLUG}}.php | awk -F"'" '{print $4}')
+          unzip -q dist/gp-eventik.zip -d $TMP_DIR
+          ZIP_VERSION=$(grep "Version:" $TMP_DIR/gp-eventik/gp-eventik.php | head -1 | awk '{print $3}')
+          ZIP_CONSTANT=$(grep "define('GPS_VERSION'" $TMP_DIR/gp-eventik/gp-eventik.php | awk -F"'" '{print $4}')
           rm -rf $TMP_DIR
 
           if [ "$ZIP_VERSION" != "${{ steps.increment_version.outputs.new_version }}" ]; then
@@ -95,17 +95,17 @@ jobs:
 
           echo "✅ Todas las validaciones del build pasaron"
 
-      - name: Update {{PREFIX}}-plugin.json with new version
+      - name: Update gpe-plugin.json with new version
         run: |
-          jq --arg version "${{ steps.increment_version.outputs.new_version }}" '.version = $version' {{PREFIX}}-plugin.json > {{PREFIX}}-plugin.json.tmp
-          mv {{PREFIX}}-plugin.json.tmp {{PREFIX}}-plugin.json
-          echo "Actualizado {{PREFIX}}-plugin.json a la versión ${{ steps.increment_version.outputs.new_version }}"
+          jq --arg version "${{ steps.increment_version.outputs.new_version }}" '.version = $version' gpe-plugin.json > gpe-plugin.json.tmp
+          mv gpe-plugin.json.tmp gpe-plugin.json
+          echo "Actualizado gpe-plugin.json a la versión ${{ steps.increment_version.outputs.new_version }}"
 
       - name: Commit version update
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add {{PREFIX}}-plugin.json
+          git add gpe-plugin.json
           git commit -m "chore: auto-increment version to ${{ steps.increment_version.outputs.new_version }}"
           git push origin main
           echo "✅ Versión commiteada a main"
@@ -131,8 +131,8 @@ jobs:
           cd updates
           pwd
           ls
-          put dist/{{SLUG}}/{{PREFIX}}-plugin.json -o {{PREFIX}}-plugin.json
-          put dist/{{SLUG}}.zip -o {{SLUG}}.zip
+          put dist/gp-eventik/gpe-plugin.json -o gpe-plugin.json
+          put dist/gp-eventik.zip -o gp-eventik.zip
           bye
           LFTPEOF
 
@@ -141,17 +141,17 @@ jobs:
           echo "🔍 Validando URLs de despliegue..."
           sleep 10
 
-          JSON_URL="https://generacionpresente.org/wp-content/updates/{{PREFIX}}-plugin.json"
+          JSON_URL="https://generacionpresente.org/wp-content/updates/gpe-plugin.json"
           JSON_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$JSON_URL")
           if [ "$JSON_STATUS" -ne 200 ]; then
-            echo "❌ Error: {{PREFIX}}-plugin.json no accesible (HTTP $JSON_STATUS)"
+            echo "❌ Error: gpe-plugin.json no accesible (HTTP $JSON_STATUS)"
             exit 1
           fi
 
-          ZIP_URL="https://generacionpresente.org/wp-content/updates/{{SLUG}}.zip"
+          ZIP_URL="https://generacionpresente.org/wp-content/updates/gp-eventik.zip"
           ZIP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$ZIP_URL")
           if [ "$ZIP_STATUS" -ne 200 ]; then
-            echo "❌ Error: {{SLUG}}.zip no accesible (HTTP $ZIP_STATUS)"
+            echo "❌ Error: gp-eventik.zip no accesible (HTTP $ZIP_STATUS)"
             exit 1
           fi
 
@@ -165,18 +165,18 @@ jobs:
           REMOTE_SLUG=$(curl -s "$JSON_URL" | jq -r '.slug')
           REMOTE_DOWNLOAD_URL=$(curl -s "$JSON_URL" | jq -r '.download_url')
 
-          if [ "$REMOTE_NAME" != "{{NAME}}" ]; then
-            echo "❌ Error: name remoto incorrecto (esperado '{{NAME}}', obtenido '$REMOTE_NAME')"
+          if [ "$REMOTE_NAME" != "GP Eventik" ]; then
+            echo "❌ Error: name remoto incorrecto (esperado 'GP Eventik', obtenido '$REMOTE_NAME')"
             exit 1
           fi
 
-          if [ "$REMOTE_SLUG" != "{{SLUG}}" ]; then
-            echo "❌ Error: slug remoto incorrecto (esperado '{{SLUG}}', obtenido '$REMOTE_SLUG')"
+          if [ "$REMOTE_SLUG" != "gp-eventik" ]; then
+            echo "❌ Error: slug remoto incorrecto (esperado 'gp-eventik', obtenido '$REMOTE_SLUG')"
             exit 1
           fi
 
-          if [[ ! "$REMOTE_DOWNLOAD_URL" == *"{{SLUG}}.zip"* ]]; then
-            echo "❌ Error: download_url remoto incorrecto (esperado contener '{{SLUG}}.zip', obtenido '$REMOTE_DOWNLOAD_URL')"
+          if [[ ! "$REMOTE_DOWNLOAD_URL" == *"gp-eventik.zip"* ]]; then
+            echo "❌ Error: download_url remoto incorrecto (esperado contener 'gp-eventik.zip', obtenido '$REMOTE_DOWNLOAD_URL')"
             exit 1
           fi
 
