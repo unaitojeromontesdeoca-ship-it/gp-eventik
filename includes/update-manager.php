@@ -49,18 +49,18 @@ class Update_Manager {
         }
 
         // La versión sale de la cabecera del archivo principal (fuente única de verdad).
-        $plugin_data = get_plugin_data(GPS_DIR . 'gp-eventik.php', false, false);
+        $plugin_data = get_plugin_data(GPE_DIR . 'gp-eventik.php', false, false);
         $this->current_version = $plugin_data['Version'] ?? '0.0.0';
 
         // Respaldo por la constante si fuera mayor.
-        if (defined('GPS_VERSION') && version_compare(GPS_VERSION, $this->current_version, '>')) {
-            $this->current_version = GPS_VERSION;
+        if (defined('GPE_VERSION') && version_compare(GPE_VERSION, $this->current_version, '>')) {
+            $this->current_version = GPE_VERSION;
         }
 
-        $this->basename = plugin_basename(GPS_DIR . 'gp-eventik.php');
+        $this->basename = plugin_basename(GPE_DIR . 'gp-eventik.php');
 
         // En modo desarrollo, la caché baja a 60s (aunque el early-return la salte igualmente).
-        if (defined('GPS_DEV_MODE') && GPS_DEV_MODE) {
+        if (defined('GPE_DEV_MODE') && GPE_DEV_MODE) {
             $this->cache_expiration = 60;
         }
 

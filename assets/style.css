@@ -1,0 +1,6 @@
+/* GP Eventik — Estilos globales frontend */
+/* Los estilos específicos de cada componente están inline en sus plantillas */
+/* Este archivo es para overrides globales si el tema interfiere */
+
+.gp-brand-landing img { max-width: 100%; height: auto; }
+.gp-brand-landing a   { transition: opacity 0.2s ease; }
