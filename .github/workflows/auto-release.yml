@@ -80,7 +80,7 @@ jobs:
           TMP_DIR=$(mktemp -d)
           unzip -q dist/gp-eventik.zip -d $TMP_DIR
           ZIP_VERSION=$(grep "Version:" $TMP_DIR/gp-eventik/gp-eventik.php | head -1 | awk '{print $3}')
-          ZIP_CONSTANT=$(grep "define('GPS_VERSION'" $TMP_DIR/gp-eventik/gp-eventik.php | awk -F"'" '{print $4}')
+          ZIP_CONSTANT=$(grep "define('GPE_VERSION'" $TMP_DIR/gp-eventik/gp-eventik.php | awk -F"'" '{print $4}')
           rm -rf $TMP_DIR
 
           if [ "$ZIP_VERSION" != "${{ steps.increment_version.outputs.new_version }}" ]; then
