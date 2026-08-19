@@ -120,19 +120,23 @@ jobs:
           fi
 
       - name: Deploy to IONOS via lftp
+        timeout-minutes: 4
         run: |
           echo "🔍 Desplegando por lftp..."
-          sudo apt-get update
-          sudo apt-get install -y lftp
+          sudo apt-get install -y lftp || (sudo apt-get update && sudo apt-get install -y lftp)
 
           lftp -u ${{ secrets.SFTP_USER }},${{ secrets.SFTP_PASSWORD }} -p ${{ steps.set_sftp_port.outputs.sftp_port }} sftp://${{ secrets.SFTP_HOST }} << LFTPEOF
           set sftp:auto-confirm yes
           set ssl:verify-certificate no
-          cd updates
+          set net:timeout 15
+          set net:max-retries 2
+          set net:reconnect-interval-base 5
+          echo "== PWD inicial =="
           pwd
+          echo "== LS raiz =="
           ls
-          put dist/gp-eventik/gpe-plugin.json -o gpe-plugin.json
-          put dist/gp-eventik.zip -o gp-eventik.zip
+          echo "== buscando updates =="
+          find . -maxdepth 2 -name updates
           bye
           LFTPEOF
 
