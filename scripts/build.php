@@ -163,15 +163,13 @@ class GP_Eventik_Builder {
     private function update_version_constant() {
         $plugin_file = $this->plugin_dir . '/' . $this->output_dir . '/' . $this->plugin_slug . '/' . $this->plugin_file;
         $content = file_get_contents($plugin_file);
-
         $content = preg_replace(
-            '/define\(\'GPS_VERSION\', \'(?:\d+\.\d+\.\d+-dev|\d+\.\d+\.\d+)\'\)/',
-            "define('GPS_VERSION', '{$this->version}')",
+            '/define\(\'GPE_VERSION\', \'(?:\d+\.\d+\.\d+-dev|\d+\.\d+\.\d+)\'\)/',
+            "define('GPE_VERSION', '{$this->version}')",
             $content
         );
-
         file_put_contents($plugin_file, $content);
-        $this->echo_step("Constante GPS_VERSION actualizada a: {$this->version}");
+        $this->echo_step("Constante GPE_VERSION actualizada a: {$this->version}");
     }
 
     private function generate_plugin_json() {
