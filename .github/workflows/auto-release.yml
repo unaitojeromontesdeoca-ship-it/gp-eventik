@@ -131,14 +131,10 @@ jobs:
           set net:timeout 15
           set net:max-retries 2
           set net:reconnect-interval-base 5
-          echo "== PWD =="
+          cd updates
           pwd
-          echo "== LS aqui =="
-          ls
-          echo "== LS wp-content =="
-          ls wp-content 2>/dev/null || echo "no hay wp-content aqui"
-          echo "== LS wp-content/updates =="
-          ls wp-content/updates 2>/dev/null || echo "no existe wp-content/updates"
+          put dist/gp-eventik/gpe-plugin.json -o gpe-plugin.json
+          put dist/gp-eventik.zip -o gp-eventik.zip
           bye
           LFTPEOF
 
