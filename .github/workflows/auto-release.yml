@@ -131,12 +131,9 @@ jobs:
           set net:timeout 15
           set net:max-retries 2
           set net:reconnect-interval-base 5
-          echo "== PWD inicial =="
           pwd
-          echo "== LS raiz =="
-          ls
-          echo "== buscando updates =="
-          find . -maxdepth 2 -name updates
+          put dist/gp-eventik/gpe-plugin.json -o gpe-plugin.json
+          put dist/gp-eventik.zip -o gp-eventik.zip
           bye
           LFTPEOF
 
